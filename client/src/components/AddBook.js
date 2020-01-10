@@ -1,33 +1,43 @@
 import React, { Component } from 'react';
-import {gql} from 'apollo-boost';
 import {graphql} from 'react-apollo';
-
-const getAuthorsQuery = gql`
-  {
-    authors {
-      id,
-      name
-    }
-  }
-`
+import {flowRight as compose} from 'lodash'
+import {getAuthorsQuery, addBookMutation, getBooksQuery} from '../queries/queries';
 
 class AddBook extends Component {
+  state = {
+    name: "",
+    genre: "",
+    authorId: ""
+  }
+
+  submitForm = (e) => {
+    e.preventDefault();
+    this.props.addBookMutation({
+      variables: {
+        name: this.state.name,
+        genre: this.state.genre,
+        authorId: this.state.authorId
+      },
+      refetchQueries: [{query: getBooksQuery}]
+    });
+  }
+
   render() {
-    const { loading, authors } = this.props.data;
+    const { loading, authors } = this.props.getAuthorsQuery;
 
     return (
-      <form id="add-book">
+      <form id="add-book" onSubmit={this.submitForm}>
         <div className="field">
           <label>Book Name:</label>
-          <input type="text"></input>
+          <input type="text" onChange={e => this.setState({ name: e.target.value })}/>
         </div>
         <div className="field">
           <label>Genre:</label>
-          <input type="text"></input>
+          <input type="text" onChange={e => this.setState({ genre: e.target.value })}/>
         </div>
         <div className="field">
           <label>Author:</label>
-          <select>
+          <select onChange={e => this.setState({ authorId: e.target.value })}>
             <option>Select Author</option>
             {loading ? (
               <option disabled>Loading Authors...</option>
@@ -44,4 +54,7 @@ class AddBook extends Component {
   }
 }
 
-export default graphql(getAuthorsQuery)(AddBook);
+export default compose(
+  graphql(getAuthorsQuery, {name: "getAuthorsQuery"}),
+  graphql(addBookMutation, {name: "addBookMutation"})
+)(AddBook);
