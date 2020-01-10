@@ -16,7 +16,7 @@ function App() {
         <h1>Ninja's Reading List</h1>
         <BookList />
         <div className="addBook">
-          <h3>Add Book</h3>
+          <h3 className="clr-pink">Add Book</h3>
           <AddBook />
         </div>
       </div>
