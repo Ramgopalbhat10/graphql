@@ -1,4 +1,22 @@
 body {
   background: #eee;
   font-family: "Nunito";
+  font-weight: bold;
+}
+
+.field input, .field select {
+  margin-left: 10px;
+}
+
+#add-book > * {
+  margin-bottom: 5px;
+}
+
+.addBook {
+  padding: 20px;
+  border: 2px solid black;
+  max-width: 300px;
+}
+.addBook h3 {
+  margin: 0 0 5px 0;
 }
